@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:xamarin/models/picture.dart';
@@ -48,6 +47,12 @@ class _PicturesState extends State<PicturesList> {
     }
   }
 
+//   void deletePicture(Picture picture) {
+//   setState(() {
+//     pictures.remove(picture);
+//   });
+// }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -69,7 +74,13 @@ class _PicturesState extends State<PicturesList> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) => DetailScreen(picture: picture)),
+                    builder: ((context) => DetailScreen(
+                        picture: picture,
+                        onDelete: (deletePicture) {
+                          setState(() {
+                            pictures.remove(deletePicture);
+                          });
+                        })),
                   ),
                 );
               },

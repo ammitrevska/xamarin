@@ -1,14 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart';
+import 'package:xamarin/main.dart';
 import 'package:xamarin/models/picture.dart';
+import 'package:xamarin/screens/deleteDialog.dart';
 import 'package:xamarin/screens/edit.dart';
 import 'package:xamarin/screens/fullScreenPicture.dart';
 
 class DetailScreen extends StatelessWidget {
   final Picture picture;
+  final void Function(Picture picture) onDelete;
 
-  const DetailScreen({super.key, required this.picture});
+  const DetailScreen({
+    super.key,
+    required this.picture,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +71,29 @@ class DetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       FloatingActionButton.extended(
-                        onPressed: () {},
+                        onPressed: () async {
+                          bool confirmed = await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return DeleteDialog(
+                                onConfirm: () {
+                                  // Perform any other actions on confirmation if needed
+                                },
+                                onDelete: (deletedPicture) {
+                                  // Notify the user that the picture is deleted
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Picture deleted'),
+                                    ),
+                                  );
+                                  onDelete(deletedPicture);
+                                  Navigator.pop(context);
+                                },
+                                picture: picture,
+                              );
+                            },
+                          );
+                        },
                         icon: const Icon(Icons.delete_rounded),
                         label: const Text("Delete"),
                         heroTag: 'delete',
