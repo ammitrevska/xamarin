@@ -9,7 +9,7 @@ class Picture{
     required this.imageThumbnail
   });
 
-    void updateTitle(String newTitle) {
+  void updateTitle(String newTitle) {
     title = newTitle;
   }
 }

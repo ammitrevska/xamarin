@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xamarin/models/picture.dart';
 import 'package:xamarin/screens/edit.dart';
+import 'package:xamarin/screens/fullScreenPicture.dart';
 
 class DetailScreen extends StatelessWidget {
   final Picture picture;
@@ -20,7 +21,19 @@ class DetailScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Image.network(picture.imageUrl),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FullScreenPicture(
+                      pictureUrl: picture.imageUrl,
+                    ),
+                  ),
+                );
+              },
+              child: Image.network(picture.imageUrl),
+            ),
             Container(
               margin: const EdgeInsets.all(15.0),
               child: Text('Title: ${picture.title}'),
@@ -66,4 +79,3 @@ class DetailScreen extends StatelessWidget {
     );
   }
 }
-
