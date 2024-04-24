@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:xamarin/main.dart';
 import 'package:xamarin/models/picture.dart';
+import 'package:xamarin/picturesProvider.dart';
 import 'package:xamarin/screens/deleteDialog.dart';
 import 'package:xamarin/screens/edit.dart';
 import 'package:xamarin/screens/fullScreenPicture.dart';
@@ -76,11 +78,11 @@ class DetailScreen extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) {
                               return DeleteDialog(
-                                onConfirm: () {
-                                  // Perform any other actions on confirmation if needed
-                                },
+                                onConfirm: () {},
                                 onDelete: (deletedPicture) {
-                                  // Notify the user that the picture is deleted
+                                  Provider.of<PicturesProvider>(context,
+                                          listen: false)
+                                      .removePicture(deletedPicture);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Picture deleted'),
