@@ -1,17 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:xamarin/models/picture.dart';
+import 'package:xamarin/picturesProvider.dart';
 
-class EditImageModal extends StatefulWidget {
+class EditDialog extends StatefulWidget {
   final Picture picture;
-  const EditImageModal({super.key, required this.picture});
+  const EditDialog({super.key, required this.picture});
 
   @override
-  State<EditImageModal> createState() => _EditImageModalState();
+  State<EditDialog> createState() => _EditDialogState();
 }
 
-class _EditImageModalState extends State<EditImageModal> {
+class _EditDialogState extends State<EditDialog> {
   late TextEditingController _controller;
 
   @override
@@ -44,8 +45,16 @@ class _EditImageModalState extends State<EditImageModal> {
                 onPressed: () {
                   String newTitle = _controller.text.trim();
                   if (newTitle.isNotEmpty) {
-                    widget.picture.title = newTitle;
+                    var picturesProvider =
+                        Provider.of<PicturesProvider>(context, listen: false);
+                    picturesProvider.editPicture(widget.picture, newTitle);
+                    picturesProvider.notifyListeners();
                     Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Changes saved"),
+                      ),
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

@@ -24,78 +24,64 @@ class _PicturesState extends State<PicturesList> {
     Provider.of<PicturesProvider>(context, listen: false).fetchPictures();
   }
 
-  // Future<void> fetchPictures() async {
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse('http://jsonplaceholder.typicode.com/photos'),
-  //     );
-  //     if (response.statusCode == 200) {
-  //       var jsonData = jsonDecode(response.body);
-  //       //for each json object we create picture obj
-  //       List<Picture> fetchedPictures = jsonData
-  //           .map<Picture>((json) => Picture(
-  //                 title: json['title'] ?? '',
-  //                 imageUrl: json['url'] ?? '',
-  //                 imageThumbnail: json['thumbnailUrl'] ??
-  //                     'https://via.placeholder.com/150/5aba2d',
-  //               ))
-  //           .toList();
-  //       setState(() {
-  //         pictures = fetchedPictures;
-  //       });
-  //     } else {
-  //       throw Exception('Failed to fetch pictures');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching pictures: $e');
-  //   }
-  // }
-
-  // void addPicture(Picture newPicture) {
-  //   setState(() {
-  //     pictures.add(newPicture);
-  //     print('Picture added successfully! Total pictures: ${pictures.length}');
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<PicturesProvider>(
       builder: (context, picturesProvider, child) {
         List<Picture> allPictures = [
-          ...picturesProvider.fetchedPictures, // Fetched pictures
-          ...picturesProvider.newlyAddedPictures, // Newly added pictures
+          ...picturesProvider.newlyAddedPictures,
+          ...picturesProvider.fetchedPictures,
         ];
         return ListView.builder(
           itemCount: allPictures.length,
           itemBuilder: (context, index) {
             final picture = allPictures[index];
-            return Card.outlined(
-              margin: const EdgeInsets.only(
-                top: 5,
-                bottom: 3,
-              ),
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 6, bottom: 6),
-                child: ListTile(
-                  title: Text(picture.title),
-                  leading: Image.network(picture.imageThumbnail),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => DetailScreen(
-                              picture: picture,
-                              onDelete: (deletePicture) {
-                                Provider.of<PicturesProvider>(context,
-                                        listen: false)
-                                    .removePicture(deletePicture);
-                              },
-                            )),
-                      ),
-                    );
-                  },
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 18),
+              child: Card(
+                margin: const EdgeInsets.only(
+                  top: 5,
+                  bottom: 3,
+                ),
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 6, bottom: 6),
+                  child: ListTile(
+                    title: Text(picture.title),
+                    leading: Image.network(picture.imageThumbnail),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => DetailScreen(
+                                picture: picture,
+                                onDelete: (deletePicture) {
+                                  var provider = Provider.of<PicturesProvider>(
+                                      context,
+                                      listen: false);
+                                  if (provider.pictures.contains(deletePicture)) {
+                                    provider.removePicture(deletePicture);
+                                  } else {
+                                    print(
+                                        'Error: Picture not found in PicturesProvider');
+                                  }
+                                },
+                                onEdit: (editedPicture) {
+                                  var provider = Provider.of<PicturesProvider>(
+                                      context,
+                                      listen: false);
+                                  if (provider.pictures.contains(editedPicture)) {
+                                    // Perform edit operation here
+                                  } else {
+                                    print(
+                                        'Error: Picture not found in PicturesProvider');
+                                  }
+                                },
+                              )),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             );

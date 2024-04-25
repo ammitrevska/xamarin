@@ -9,10 +9,13 @@ class AddDialog extends StatelessWidget {
   final TextEditingController imageUrlController = TextEditingController();
   final TextEditingController thumbnailUrlController = TextEditingController();
 
-  AddDialog({Key? key, required this.addPictureCallBack}) : super(key: key);
+  AddDialog({super.key, required this.addPictureCallBack});
 
   @override
   Widget build(BuildContext context) {
+    var picturesProvider = Provider.of<PicturesProvider>(context, listen: false);
+    int nextId = picturesProvider.pictures.length + 1;
+
     return AlertDialog(
       title: const Text("Add a picture"),
       content: Column(
@@ -53,6 +56,7 @@ class AddDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             final newPicture = Picture(
+              id: nextId,
               title: titleController.text,
               imageUrl: imageUrlController.text,
               imageThumbnail: thumbnailUrlController.text,

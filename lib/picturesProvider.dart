@@ -1,23 +1,24 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:xamarin/models/picture.dart';
+import 'package:collection/collection.dart';
+
 
 class PicturesProvider extends ChangeNotifier {
   final List<Picture> _fetchedPictures = [];
   final List<Picture> _newlyAddedPictures = [];
   final List<Picture> _pictures = [];
 
- List<Picture> get fetchedPictures => _fetchedPictures;
+  List<Picture> get fetchedPictures => _fetchedPictures;
   List<Picture> get newlyAddedPictures => _newlyAddedPictures;
-
   List<Picture> get pictures => _pictures;
 
   bool addPicture(Picture picture) {
-    _pictures.add(picture);
+    _newlyAddedPictures.add(picture);
     notifyListeners();
-  return _pictures.contains(picture); // Check if the picture is in the list
-
+    return _newlyAddedPictures.contains(picture); 
   }
 
   void fetchPictures() async {
@@ -29,6 +30,7 @@ class PicturesProvider extends ChangeNotifier {
         var jsonData = jsonDecode(response.body);
         List<Picture> fetchedPictures = jsonData
             .map<Picture>((json) => Picture(
+              id: json['id'] ?? 0,
                   title: json['title'] ?? '',
                   imageUrl: json['url'] ?? '',
                   imageThumbnail: json['thumbnailUrl'] ??
@@ -36,7 +38,7 @@ class PicturesProvider extends ChangeNotifier {
                 ))
             .toList();
         _fetchedPictures.addAll(fetchedPictures);
-        notifyListeners(); 
+        notifyListeners();
       } else {
         throw Exception('Failed to fetch pictures');
       }
@@ -45,23 +47,25 @@ class PicturesProvider extends ChangeNotifier {
     }
   }
 
-  // bool addNewPicture(Picture picture) {
-  //   _newlyAddedPictures.add(picture);
-  //   notifyListeners(); // Notify listeners after adding a new picture
-  //     return _pictures.contains(picture); // Check if the picture is in the list
-
-  // }
-
   void removePicture(Picture picture) {
-  bool removedFromFetched = _fetchedPictures.remove(picture);
-  bool removedFromNewlyAdded = _newlyAddedPictures.remove(picture);
-  bool removedFromPictures = _pictures.remove(picture); // Remove from Provider's state
+    bool removedFromFetched = _fetchedPictures.remove(picture);
+    bool removedFromNewlyAdded = _newlyAddedPictures.remove(picture);
+    // bool removedFromPictures =
+    //     _pictures.remove(picture);
 
-  if (removedFromFetched || removedFromNewlyAdded || removedFromPictures) {
-    notifyListeners(); // Notify listeners only if the picture was removed from any list
+    if (removedFromFetched || removedFromNewlyAdded) {
+      notifyListeners();
+    }
+  }
+
+ void editPicture(Picture picture, String newTitle) {
+  if (_fetchedPictures.contains(picture) ||
+      _newlyAddedPictures.contains(picture) ||
+      _pictures.contains(picture)) {
+    picture.updateTitle(newTitle);
+    notifyListeners();
+  } else {
+    print('Picture not found for editing');
   }
 }
-
-
 }
-

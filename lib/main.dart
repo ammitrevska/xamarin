@@ -34,16 +34,8 @@ class MyApp extends StatelessWidget {
         elevation: 0,
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.blue[100] ?? Colors.blue,
-              Colors.indigo[400] ?? Colors.indigo,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        color: const Color.fromRGBO(221, 224, 255, 1),
+        padding: const EdgeInsets.only(top: 13),
         child: const PicturesList(),
       ),
       floatingActionButton: FloatingActionButton.extended(
