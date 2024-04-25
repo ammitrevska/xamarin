@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Home"),
+        title: const Text(
+          "Home",
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,

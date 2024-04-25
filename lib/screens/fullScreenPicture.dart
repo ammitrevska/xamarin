@@ -11,7 +11,10 @@ class FullScreenPicture extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(221, 224, 255, 1),
       appBar: AppBar(
-        title: const Text("Image"),
+        title: const Text(
+          "Image",
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,
