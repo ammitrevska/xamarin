@@ -9,8 +9,10 @@ class FullScreenPicture extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(221, 224, 255, 1),
       appBar: AppBar(
         title: const Text("Image"),
+        backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,
       ),

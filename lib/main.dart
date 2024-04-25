@@ -45,8 +45,7 @@ class MyApp extends StatelessWidget {
             builder: (BuildContext context) {
               return AddDialog(
                 addPictureCallBack: (newPicture) {
-                  picturesProvider.addPicture(
-                      newPicture); 
+                  picturesProvider.addPicture(newPicture);
                 },
               );
             },
